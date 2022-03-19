@@ -1,6 +1,39 @@
-type ExampleEntity @entity {
+type LlamaPayFactory @entity {
   id: ID!
-  count: BigInt!
-  token: Bytes! # address
-  llamaPay: Bytes! # address
+  count: Int!
+  address: Bytes!
+  createdTimestamp: BigInt!
+  createdBlock: BigInt!
+}
+
+type LlamaPayContract @entity {
+  id: ID!
+  address: Bytes!
+  factory: Bytes!
+  token: Bytes!
+  deposits: BigInt!
+  streams: [Stream!]! @derivedFrom(field: "contract")
+  createdTimestamp: BigInt!
+  createdBlock: BigInt!
+}
+
+type Stream @entity {
+  id: ID!
+  streamId: Bytes!
+  contract: LlamaPayContract!
+  payer: User!
+  payee: User!
+  active: Boolean!
+  amountPerSec: BigInt!
+  createdTimestamp: BigInt!
+  createdBlock: BigInt!
+}
+
+type User @entity {
+  id: ID!
+  address: Bytes!
+  streamsAsPayer: [Stream!]! @derivedFrom(field: "payer")
+  streamsAsPayee: [Stream!]! @derivedFrom(field: "payee")
+  createdTimestamp: BigInt!
+  createdBlock: BigInt!
 }

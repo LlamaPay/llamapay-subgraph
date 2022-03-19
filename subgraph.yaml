@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
@@ -8,19 +8,43 @@ dataSources:
     source:
       address: "0xCA052D073591C0C059675B6F7F95cE75a4Ab8fc8"
       abi: LlamaPayFactory
+      startBlock: 30504317
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - LlamaPayCreated
-        - OwnershipTransferred
+        - LlamaPayFactory
+        - LlamaPayContract
       abis:
         - name: LlamaPayFactory
           file: ./abis/LlamaPayFactory.json
       eventHandlers:
         - event: LlamaPayCreated(address,address)
-          handler: handleLlamaPayCreated
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-      file: ./src/mapping.ts
+          handler: onLlamaPayCreated
+      file: ./src/mappings/LlamaPayFactory.ts
+
+templates:
+  - kind: ethereum/contract
+    name: LlamaPay
+    network: kovan
+    source:
+      abi: LlamaPay
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - LlamaPayFactory
+        - LlamaPayContract
+      abis:
+        - name: LlamaPay
+          file: ./abis/LlamaPay.json
+        - name: LlamaPayFactory
+          file: ./abis/LlamaPayFactory.json
+      eventHandlers:
+        - event: StreamCreated(indexed address,indexed address,uint216,bytes32)
+          handler: onStreamCreated
+        - event: StreamCancelled(indexed address,indexed address,uint216,bytes32)
+          handler: onStreamCancelled
+      file: ./src/mappings/LlamaPay.ts
