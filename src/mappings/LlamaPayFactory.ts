@@ -1,4 +1,4 @@
-import { BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Bytes } from "@graphprotocol/graph-ts";
 import { LlamaPayCreated } from "../../generated/templates/LlamaPay/LlamaPayFactory";
 import {
   LlamaPayContract,
@@ -6,7 +6,7 @@ import {
 } from "../../generated/schema";
 import { LlamaPay } from "../../generated/templates";
 
-const factoryAddress = "0xcfb166F1C719376937886FFE10450E6778c937bC";
+const factoryAddress = "0xCA052D073591C0C059675B6F7F95cE75a4Ab8fc8";
 
 export function onLlamaPayCreated(event: LlamaPayCreated): void {
   let factory = LlamaPayFactory.load(factoryAddress);
@@ -22,7 +22,6 @@ export function onLlamaPayCreated(event: LlamaPayCreated): void {
   
   contract.address = event.params.llamaPay;
   contract.factory = factory.address;
-  contract.deposits = BigInt.fromU32(0);
   contract.streams = [];
   contract.createdTimestamp = event.block.timestamp;
   contract.createdBlock = event.block.number;
