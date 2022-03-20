@@ -6,7 +6,7 @@ dataSources:
     name: LlamaPayFactory
     network: kovan
     source:
-      address: "0xCA052D073591C0C059675B6F7F95cE75a4Ab8fc8"
+      address: "0x4dDFc224e5DA184dC458769491cb2F17E37567B7"
       abi: LlamaPayFactory
       startBlock: 30504317
     mapping:
