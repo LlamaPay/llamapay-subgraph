@@ -18,11 +18,10 @@ export function onLlamaPayCreated(event: LlamaPayCreated): void {
     factory.createdBlock = event.block.number;
   }
 
-  let contract = new LlamaPayContract(event.params.llamaPay.toString());
+  let contract = new LlamaPayContract(event.params.llamaPay.toHexString());
   
   contract.address = event.params.llamaPay;
   contract.factory = factory.address;
-  contract.streams = [];
   contract.createdTimestamp = event.block.timestamp;
   contract.createdBlock = event.block.number;
 
