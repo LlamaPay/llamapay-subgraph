@@ -2,7 +2,7 @@ import {
   StreamCancelled,
   StreamCreated,
 } from "../../generated/templates/LlamaPay/LlamaPay";
-import { LlamaPayContract, Stream, User } from "../../generated/schema";
+import { HistoryEvent, LlamaPayContract, Stream, User } from "../../generated/schema";
 
 export function onStreamCreated(event: StreamCreated): void {
   let contract = LlamaPayContract.load(event.address.toHexString());
@@ -24,6 +24,7 @@ export function onStreamCreated(event: StreamCreated): void {
   let stream = new Stream(event.params.streamId.toHexString());
   stream.streamId = event.params.streamId;
   stream.contract = contract.id;
+  stream.token = contract.token;
   stream.payer = payer.id;
   stream.payee = payee.id;
   stream.active = true;
@@ -31,6 +32,13 @@ export function onStreamCreated(event: StreamCreated): void {
   stream.createdTimestamp = event.block.timestamp;
   stream.createdBlock = event.block.number;
 
+  let historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
+  historyEvent.eventType = "StreamCreated";
+  historyEvent.stream = stream.id;
+  historyEvent.createdTimestamp = event.block.timestamp;
+  historyEvent.createdBlock = event.block.number;
+
+  historyEvent.save();
   payer.save();
   payee.save();
   stream.save();
@@ -39,7 +47,19 @@ export function onStreamCreated(event: StreamCreated): void {
 
 export function onStreamCancelled(event: StreamCancelled): void {
   let stream = Stream.load(event.params.streamId.toHexString());
-  if (stream === null) return;
+  let payer = User.load(event.params.from.toHexString());
+  let payee = User.load(event.params.to.toHexString());
+  if (stream === null || payer === null || payee === null) return;
   stream.active = false;
+
+  let historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
+  historyEvent.eventType = "StreamCancelled";
+  historyEvent.stream = stream.id;
+  historyEvent.createdTimestamp = event.block.timestamp;
+  historyEvent.createdBlock = event.block.number;
+
+  historyEvent.save();
+  payer.save();
+  payee.save();
   stream.save();
 }

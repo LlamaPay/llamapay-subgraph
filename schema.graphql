@@ -9,7 +9,7 @@ type LlamaPayFactory @entity {
 type LlamaPayContract @entity {
   id: ID!
   address: Bytes!
-  factory: Bytes!
+  factory: LlamaPayFactory!
   token: Bytes!
   streams: [Stream!]! @derivedFrom(field: "contract")
   createdTimestamp: BigInt!
@@ -22,8 +22,10 @@ type Stream @entity {
   contract: LlamaPayContract!
   payer: User!
   payee: User!
-  active: Boolean!
+  token: Bytes!
   amountPerSec: BigInt!
+  active: Boolean!
+  historicalEvents: [HistoryEvent!]! @derivedFrom(field: "stream")
   createdTimestamp: BigInt!
   createdBlock: BigInt!
 }
@@ -33,6 +35,14 @@ type User @entity {
   address: Bytes!
   streamsAsPayer: [Stream!]! @derivedFrom(field: "payer")
   streamsAsPayee: [Stream!]! @derivedFrom(field: "payee")
+  createdTimestamp: BigInt!
+  createdBlock: BigInt!
+}
+
+type HistoryEvent @entity {
+  id: ID!
+  eventType: String!
+  stream: Stream!
   createdTimestamp: BigInt!
   createdBlock: BigInt!
 }

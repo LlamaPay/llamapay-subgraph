@@ -6,7 +6,7 @@ import {
 } from "../../generated/schema";
 import { LlamaPay } from "../../generated/templates";
 
-const factoryAddress = "0x4dDFc224e5DA184dC458769491cb2F17E37567B7";
+const factoryAddress = "0xF7410203fe4B7D8595DA5211b52e5Dde405ea301";
 
 export function onLlamaPayCreated(event: LlamaPayCreated): void {
   let factory = LlamaPayFactory.load(factoryAddress);
@@ -21,7 +21,7 @@ export function onLlamaPayCreated(event: LlamaPayCreated): void {
   let contract = new LlamaPayContract(event.params.llamaPay.toHexString());
   
   contract.address = event.params.llamaPay;
-  contract.factory = factory.address;
+  contract.factory = factory.id;
   contract.token = event.params.token;
   contract.createdTimestamp = event.block.timestamp;
   contract.createdBlock = event.block.number;
