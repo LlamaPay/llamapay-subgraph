@@ -8,6 +8,7 @@ export function onStreamCreated(event: StreamCreated): void {
   let contract = LlamaPayContract.load(event.address.toHexString());
   let payer = User.load(event.params.from.toHexString());
   let payee = User.load(event.params.to.toHexString());
+  let historyEvent = HistoryEvent.load(event.transaction.hash.toHexString());
   if (contract === null) return;
   if (payer === null) {
     payer = new User(event.params.from.toHexString());
@@ -21,6 +22,10 @@ export function onStreamCreated(event: StreamCreated): void {
     payee.createdTimestamp = event.block.timestamp;
     payee.createdBlock = event.block.number;
   }
+  if (historyEvent !== null) {
+    historyEvent.eventType = "StreamModified";
+    historyEvent.oldStream = historyEvent.stream;
+  }
   let stream = new Stream(event.params.streamId.toHexString());
   stream.streamId = event.params.streamId;
   stream.contract = contract.id;
@@ -32,8 +37,10 @@ export function onStreamCreated(event: StreamCreated): void {
   stream.createdTimestamp = event.block.timestamp;
   stream.createdBlock = event.block.number;
 
-  let historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
-  historyEvent.eventType = "StreamCreated";
+  if (historyEvent === null) {
+    historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
+    historyEvent.eventType = "StreamCreated";
+  }
   historyEvent.stream = stream.id;
   historyEvent.users = [payer.id, payee.id];
   historyEvent.createdTimestamp = event.block.timestamp;

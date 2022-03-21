@@ -45,6 +45,7 @@ type HistoryEvent @entity {
   eventType: String!
   users: [User!]!
   stream: Stream!
+  oldStream: Stream
   createdTimestamp: BigInt!
   createdBlock: BigInt!
 }
