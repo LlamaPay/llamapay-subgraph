@@ -35,6 +35,7 @@ type User @entity {
   address: Bytes!
   streamsAsPayer: [Stream!]! @derivedFrom(field: "payer")
   streamsAsPayee: [Stream!]! @derivedFrom(field: "payee")
+  historicalEvents: [HistoryEvent!]! @derivedFrom(field: "users")
   createdTimestamp: BigInt!
   createdBlock: BigInt!
 }
@@ -42,6 +43,7 @@ type User @entity {
 type HistoryEvent @entity {
   id: ID!
   eventType: String!
+  users: [User!]!
   stream: Stream!
   createdTimestamp: BigInt!
   createdBlock: BigInt!

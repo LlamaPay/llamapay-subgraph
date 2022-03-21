@@ -35,6 +35,7 @@ export function onStreamCreated(event: StreamCreated): void {
   let historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
   historyEvent.eventType = "StreamCreated";
   historyEvent.stream = stream.id;
+  historyEvent.users = [payer.id, payee.id];
   historyEvent.createdTimestamp = event.block.timestamp;
   historyEvent.createdBlock = event.block.number;
 
@@ -55,6 +56,7 @@ export function onStreamCancelled(event: StreamCancelled): void {
   let historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
   historyEvent.eventType = "StreamCancelled";
   historyEvent.stream = stream.id;
+  historyEvent.users = [payer.id, payee.id];
   historyEvent.createdTimestamp = event.block.timestamp;
   historyEvent.createdBlock = event.block.number;
 
