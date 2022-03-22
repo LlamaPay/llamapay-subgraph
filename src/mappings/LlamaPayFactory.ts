@@ -4,12 +4,13 @@ import {
   LlamaPayContract,
   LlamaPayFactory
 } from "../../generated/schema";
-import { LlamaPay } from "../../generated/templates";
 
+// Address for Factory
 const factoryAddress = "0xF7410203fe4B7D8595DA5211b52e5Dde405ea301";
 
 export function onLlamaPayCreated(event: LlamaPayCreated): void {
   let factory = LlamaPayFactory.load(factoryAddress);
+  // If factory node doesn't exist then create one 
   if (factory === null) {
     factory = new LlamaPayFactory(factoryAddress);
     factory.count = 0;
@@ -18,6 +19,7 @@ export function onLlamaPayCreated(event: LlamaPayCreated): void {
     factory.createdBlock = event.block.number;
   }
 
+  // Create new contract node
   let contract = new LlamaPayContract(event.params.llamaPay.toHexString());
   
   contract.address = event.params.llamaPay;
@@ -27,7 +29,6 @@ export function onLlamaPayCreated(event: LlamaPayCreated): void {
   contract.createdBlock = event.block.number;
 
   contract.save();
-  LlamaPay.create(event.params.llamaPay);
   factory.count += 1;
   factory.save();
 }
