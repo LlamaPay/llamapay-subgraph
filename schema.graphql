@@ -21,6 +21,7 @@ type Stream @entity {
   id: ID!
   streamId: Bytes!
   contract: LlamaPayContract!
+  users: [User!]!
   payer: User!
   payee: User!
   token: Bytes!
@@ -34,8 +35,7 @@ type Stream @entity {
 type User @entity {
   id: ID!
   address: Bytes!
-  streamsAsPayer: [Stream!]! @derivedFrom(field: "payer")
-  streamsAsPayee: [Stream!]! @derivedFrom(field: "payee")
+  streams: [Stream!]! @derivedFrom(field: "users")
   historicalEvents: [HistoryEvent!]! @derivedFrom(field: "users")
   createdTimestamp: BigInt!
   createdBlock: BigInt!

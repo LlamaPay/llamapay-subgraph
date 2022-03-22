@@ -42,6 +42,7 @@ export function onStreamCreated(event: StreamCreated): void {
   let stream = new Stream(event.params.streamId.toHexString());
   stream.streamId = event.params.streamId;
   stream.contract = contract.id;
+  stream.users = [payer.id, payee.id];
   stream.token = contract.token;
   stream.payer = payer.id;
   stream.payee = payee.id;
