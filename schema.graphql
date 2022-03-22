@@ -2,6 +2,7 @@ type LlamaPayFactory @entity {
   id: ID!
   count: Int! #Amount of LlamaPay contracts
   address: Bytes!
+  contracts: [LlamaPayContract!]! @derivedFrom(field: "factory")
   createdTimestamp: BigInt!
   createdBlock: BigInt!
 }
