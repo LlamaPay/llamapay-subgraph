@@ -6,7 +6,7 @@ import {
 } from "../../generated/schema";
 
 // Address for Factory
-const factoryAddress = "0xcfb166F1C719376937886FFE10450E6778c937bC";
+const factoryAddress = "0xF7410203fe4B7D8595DA5211b52e5Dde405ea301";
 
 export function onLlamaPayCreated(event: LlamaPayCreated): void {
   let factory = LlamaPayFactory.load(factoryAddress);
