@@ -1,9 +1,5 @@
 [
-  {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
   {
     "anonymous": false,
     "inputs": [
@@ -69,47 +65,21 @@
   {
     "inputs": [],
     "name": "DECIMALS_DIVISOR",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "balances",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint216",
-        "name": "amountPerSec",
-        "type": "uint216"
-      }
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint216", "name": "amountPerSec", "type": "uint216" }
     ],
     "name": "cancelStream",
     "outputs": [],
@@ -118,16 +88,8 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint216",
-        "name": "amountPerSec",
-        "type": "uint216"
-      }
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint216", "name": "amountPerSec", "type": "uint216" }
     ],
     "name": "createStream",
     "outputs": [],
@@ -136,11 +98,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
     "name": "deposit",
     "outputs": [],
@@ -154,16 +112,8 @@
         "name": "amountToDeposit",
         "type": "uint256"
       },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint216",
-        "name": "amountPerSec",
-        "type": "uint216"
-      }
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint216", "name": "amountPerSec", "type": "uint216" }
     ],
     "name": "depositAndCreate",
     "outputs": [],
@@ -172,16 +122,8 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
     "name": "emergencyRug",
     "outputs": [],
@@ -191,86 +133,40 @@
   {
     "inputs": [],
     "name": "factory",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "payerAddress",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "payerAddress", "type": "address" }
     ],
     "name": "getPayerBalance",
-    "outputs": [
-      {
-        "internalType": "int256",
-        "name": "",
-        "type": "int256"
-      }
-    ],
+    "outputs": [{ "internalType": "int256", "name": "", "type": "int256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint216",
-        "name": "amountPerSec",
-        "type": "uint216"
-      }
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint216", "name": "amountPerSec", "type": "uint216" }
     ],
     "name": "getStreamId",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "pure",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "oldTo",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "oldTo", "type": "address" },
       {
         "internalType": "uint216",
         "name": "oldAmountPerSec",
         "type": "uint216"
       },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint216",
-        "name": "amountPerSec",
-        "type": "uint216"
-      }
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint216", "name": "amountPerSec", "type": "uint216" }
     ],
     "name": "modifyStream",
     "outputs": [],
@@ -278,20 +174,10 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "payers",
     "outputs": [
-      {
-        "internalType": "uint40",
-        "name": "lastPayerUpdate",
-        "type": "uint40"
-      },
+      { "internalType": "uint40", "name": "lastPayerUpdate", "type": "uint40" },
       {
         "internalType": "uint216",
         "name": "totalPaidPerSec",
@@ -302,21 +188,9 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "name": "streamToStart",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -324,32 +198,16 @@
     "inputs": [],
     "name": "token",
     "outputs": [
-      {
-        "internalType": "contract IERC20",
-        "name": "",
-        "type": "address"
-      }
+      { "internalType": "contract IERC20", "name": "", "type": "address" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint216",
-        "name": "amountPerSec",
-        "type": "uint216"
-      }
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint216", "name": "amountPerSec", "type": "uint216" }
     ],
     "name": "withdraw",
     "outputs": [],
@@ -358,11 +216,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
     "name": "withdrawPayer",
     "outputs": [],
@@ -378,21 +232,9 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint216",
-        "name": "amountPerSec",
-        "type": "uint216"
-      }
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint216", "name": "amountPerSec", "type": "uint216" }
     ],
     "name": "withdrawable",
     "outputs": [
@@ -401,16 +243,8 @@
         "name": "withdrawableAmount",
         "type": "uint256"
       },
-      {
-        "internalType": "uint256",
-        "name": "lastUpdate",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "owed",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "lastUpdate", "type": "uint256" },
+      { "internalType": "uint256", "name": "owed", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
