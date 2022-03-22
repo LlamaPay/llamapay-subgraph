@@ -4,6 +4,7 @@ import {
   LlamaPayContract,
   LlamaPayFactory
 } from "../../generated/schema";
+import {LlamaPay} from "../../generated/templates"
 
 // Address for Factory
 const factoryAddress = "0xF7410203fe4B7D8595DA5211b52e5Dde405ea301";
@@ -27,6 +28,9 @@ export function onLlamaPayCreated(event: LlamaPayCreated): void {
   contract.token = event.params.token;
   contract.createdTimestamp = event.block.timestamp;
   contract.createdBlock = event.block.number;
+
+  // Update mapping with new contract address
+  LlamaPay.create(event.params.llamaPay);
 
   contract.save();
   factory.count += 1;

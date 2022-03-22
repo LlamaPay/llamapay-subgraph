@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0xF7410203fe4B7D8595DA5211b52e5Dde405ea301"
       abi: LlamaPayFactory
-      startBlock: 10362640
+      startBlock: 10362620
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
