@@ -6,7 +6,7 @@ dataSources:
     name: LlamaPayFactory
     network: rinkeby
     source:
-      address: "0xF7410203fe4B7D8595DA5211b52e5Dde405ea301"
+      address: "0xcfb166F1C719376937886FFE10450E6778c937bC"
       abi: LlamaPayFactory
       startBlock: 10362642
     mapping:

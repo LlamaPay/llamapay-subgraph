@@ -2,7 +2,12 @@ import {
   StreamCancelled,
   StreamCreated,
 } from "../../generated/templates/LlamaPay/LlamaPay";
-import { HistoryEvent, LlamaPayContract, Stream, User } from "../../generated/schema";
+import {
+  HistoryEvent,
+  LlamaPayContract,
+  Stream,
+  User,
+} from "../../generated/schema";
 
 // Handles StreamCreated and Modify Stream
 export function onStreamCreated(event: StreamCreated): void {
