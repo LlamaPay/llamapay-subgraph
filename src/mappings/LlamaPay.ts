@@ -1,6 +1,7 @@
 import {
   StreamCancelled,
   StreamCreated,
+  StreamModified,
 } from "../../generated/templates/LlamaPay/LlamaPay";
 import {
   HistoryEvent,
@@ -9,57 +10,46 @@ import {
   User,
 } from "../../generated/schema";
 
-// Handles StreamCreated and Modify Stream
 export function onStreamCreated(event: StreamCreated): void {
-  // Load nodes
+  const timestamp = event.block.timestamp;
+  const block = event.block.number;
+  const hash = event.transaction.hash;
   let contract = LlamaPayContract.load(event.address.toHexString());
-  let payer = User.load(event.params.from.toHexString());
-  let payee = User.load(event.params.to.toHexString());
-  let historyEvent = HistoryEvent.load(event.transaction.hash.toHexString());
   if (contract === null) return;
-  // Create new payer if payer node is null
+  let payer = User.load(event.params.from.toHexString());
   if (payer === null) {
     payer = new User(event.params.from.toHexString());
     payer.address = event.params.from;
-    payer.createdTimestamp = event.block.timestamp;
-    payer.createdBlock = event.block.number;
+    payer.createdTimestamp = timestamp;
+    payer.createdBlock = block;
   }
-  // Create new payee if payee node is null
+  let payee = User.load(event.params.to.toHexString());
   if (payee === null) {
     payee = new User(event.params.to.toHexString());
     payee.address = event.params.to;
-    payee.createdTimestamp = event.block.timestamp;
-    payee.createdBlock = event.block.number;
+    payee.createdTimestamp = timestamp;
+    payee.createdBlock = block;
   }
-  // If history event doesn't === null then it means that it's the transaction for modify stream
-  // Since modify stream fires off StreamCancelled AND StreamCreated and the history event ID === transaction hash
-  // We can just replace the StreamCancelled history event with StreamModified
-  if (historyEvent !== null) {
-    historyEvent.eventType = "StreamModified";
-    historyEvent.oldStream = historyEvent.stream;
-  }
-  // Create stream node
   let stream = new Stream(event.params.streamId.toHexString());
   stream.streamId = event.params.streamId;
   stream.contract = contract.id;
   stream.users = [payer.id, payee.id];
-  stream.token = contract.token;
   stream.payer = payer.id;
   stream.payee = payee.id;
-  stream.active = true;
+  stream.token = contract.token;
   stream.amountPerSec = event.params.amountPerSec;
-  stream.createdTimestamp = event.block.timestamp;
-  stream.createdBlock = event.block.number;
+  stream.active = true;
+  stream.createdTimestamp = timestamp;
+  stream.createdBlock = block;
 
-  // Create history event with type StreamCreated if historyEvent node doesn't exist
-  if (historyEvent === null) {
-    historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
-    historyEvent.eventType = "StreamCreated";
-  }
-  historyEvent.stream = stream.id;
+  let historyEvent = new HistoryEvent(hash.toHexString());
+  historyEvent.id = hash.toHexString();
+  historyEvent.eventType = "StreamCreated";
+  historyEvent.txHash = hash;
   historyEvent.users = [payer.id, payee.id];
-  historyEvent.createdTimestamp = event.block.timestamp;
-  historyEvent.createdBlock = event.block.number;
+  historyEvent.stream = stream.id;
+  historyEvent.createdTimestamp = timestamp;
+  historyEvent.createdBlock = block;
 
   historyEvent.save();
   payer.save();
@@ -68,23 +58,78 @@ export function onStreamCreated(event: StreamCreated): void {
   contract.save();
 }
 
-// Handles StreamCancelled and Modify Stream
 export function onStreamCancelled(event: StreamCancelled): void {
+  const timestamp = event.block.timestamp;
+  const block = event.block.number;
+  const hash = event.transaction.hash;
   let stream = Stream.load(event.params.streamId.toHexString());
   let payer = User.load(event.params.from.toHexString());
   let payee = User.load(event.params.to.toHexString());
   if (stream === null || payer === null || payee === null) return;
   stream.active = false;
-
-  let historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
+  let historyEvent = new HistoryEvent(hash.toHexString());
+  historyEvent.id = hash.toHexString();
   historyEvent.eventType = "StreamCancelled";
-  historyEvent.stream = stream.id;
+  historyEvent.txHash = hash;
   historyEvent.users = [payer.id, payee.id];
-  historyEvent.createdTimestamp = event.block.timestamp;
-  historyEvent.createdBlock = event.block.number;
+  historyEvent.stream = stream.id;
+  historyEvent.createdTimestamp = timestamp;
+  historyEvent.createdBlock = block;
 
   historyEvent.save();
+  stream.save();
   payer.save();
   payee.save();
+}
+
+export function onStreamModified(event: StreamModified): void {
+  const timestamp = event.block.timestamp;
+  const block = event.block.number;
+  const hash = event.transaction.hash;
+  let contract = LlamaPayContract.load(event.address.toHexString());
+  let oldStream = Stream.load(event.params.oldStreamId.toHexString());
+  let oldPayee = User.load(event.params.oldTo.toHexString());
+  if (oldStream === null || contract === null || oldPayee === null) return;
+  let payer = User.load(event.params.from.toHexString());
+  if (payer === null) {
+    payer = new User(event.params.from.toHexString());
+    payer.address = event.params.from;
+    payer.createdTimestamp = timestamp;
+    payer.createdBlock = block;
+  }
+  let payee = User.load(event.params.to.toHexString());
+  if (payee === null) {
+    payee = new User(event.params.to.toHexString());
+    payee.address = event.params.to;
+    payee.createdTimestamp = timestamp;
+    payee.createdBlock = block;
+  }
+  oldStream.active = false;
+  let stream = new Stream(event.params.newStreamId.toHexString());
+  stream.streamId = event.params.newStreamId;
+  stream.contract = contract.id;
+  stream.users = [payer.id, payee.id];
+  stream.payer = payer.id;
+  stream.payee = payee.id;
+  stream.token = contract.token;
+  stream.amountPerSec = event.params.amountPerSec;
+  stream.active = true;
+  stream.createdTimestamp = timestamp;
+  stream.createdBlock = block;
+  let historyEvent = new HistoryEvent(hash.toHexString());
+  historyEvent.txHash = hash;
+  historyEvent.eventType = "StreamModified";
+  historyEvent.users = [payer.id, payee.id, oldPayee.id];
+  historyEvent.stream = stream.id;
+  historyEvent.oldStream = oldStream.id;
+  historyEvent.createdTimestamp = timestamp;
+  historyEvent.createdBlock = block;
+
+  historyEvent.save();
   stream.save();
+  payee.save();
+  payer.save();
+  oldStream.save();
+  oldPayee.save();
+  contract.save();
 }

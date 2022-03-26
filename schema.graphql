@@ -43,6 +43,7 @@ type User @entity {
 
 type HistoryEvent @entity {
   id: ID!
+  txHash: Bytes!
   eventType: String!
   users: [User!]!
   stream: Stream!

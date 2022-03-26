@@ -6,9 +6,9 @@ dataSources:
     name: LlamaPayFactory
     network: rinkeby
     source:
-      address: "0xF7410203fe4B7D8595DA5211b52e5Dde405ea301"
+      address: "0x068d6B8aD65679a741D7086c0cb96f8530B38494"
       abi: LlamaPayFactory
-      startBlock: 10362620
+      startBlock: 10394663
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -47,4 +47,6 @@ templates:
           handler: onStreamCreated
         - event: StreamCancelled(indexed address,indexed address,uint216,bytes32)
           handler: onStreamCancelled
+        - event: StreamModified(indexed address,indexed address,uint216,bytes32,indexed address,uint216,bytes32)
+          handler: onStreamModified
       file: ./src/mappings/LlamaPay.ts
