@@ -39,6 +39,8 @@ export function onLlamaPayCreated(event: LlamaPayCreated): void {
   contract.createdTimestamp = event.block.timestamp;
   contract.createdBlock = event.block.number;
 
+  token.contract = contract.id;
+
   // Update mapping with new contract address
   LlamaPay.create(event.params.llamaPay);
 
