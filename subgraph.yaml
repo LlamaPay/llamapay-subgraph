@@ -19,6 +19,8 @@ dataSources:
       abis:
         - name: LlamaPayFactory
           file: ./abis/LlamaPayFactory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: LlamaPayCreated(address,address)
           handler: onLlamaPayCreated

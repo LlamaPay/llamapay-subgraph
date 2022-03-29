@@ -11,7 +11,7 @@ type LlamaPayContract @entity {
   id: ID!
   address: Bytes!
   factory: LlamaPayFactory!
-  token: Bytes!
+  token: Token!
   streams: [Stream!]! @derivedFrom(field: "contract")
   createdTimestamp: BigInt!
   createdBlock: BigInt!
@@ -24,7 +24,7 @@ type Stream @entity {
   users: [User!]!
   payer: User!
   payee: User!
-  token: Bytes!
+  token: Token!
   amountPerSec: BigInt!
   active: Boolean!
   historicalEvents: [HistoryEvent!]! @derivedFrom(field: "stream")
@@ -50,4 +50,12 @@ type HistoryEvent @entity {
   oldStream: Stream # If event is modified stream, then stores the old stream 
   createdTimestamp: BigInt!
   createdBlock: BigInt!
+}
+
+type Token @entity {
+  id: ID!
+  address: Bytes!
+  symbol: String!
+  name: String!
+  decimals: Int!
 }
