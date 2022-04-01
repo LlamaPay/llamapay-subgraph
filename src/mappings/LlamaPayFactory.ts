@@ -10,7 +10,7 @@ import {ERC20} from "../../generated/LlamaPayFactory/ERC20"
 
 
 // Address for Factory
-const factoryAddress = "0x068d6B8aD65679a741D7086c0cb96f8530B38494";
+const factoryAddress = "0x0BF353cF4cffBf1C2F084E5762FA62E654c8eBB8";
 
 export function onLlamaPayCreated(event: LlamaPayCreated): void {
   let factory = LlamaPayFactory.load(factoryAddress);
