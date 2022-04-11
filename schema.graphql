@@ -59,4 +59,6 @@ type Token @entity {
   name: String!
   decimals: Int!
   contract: LlamaPayContract!
+  createdTimestamp: BigInt!
+  createdBlock: BigInt!
 }

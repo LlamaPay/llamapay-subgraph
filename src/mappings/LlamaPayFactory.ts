@@ -10,7 +10,7 @@ import {ERC20} from "../../generated/LlamaPayFactory/ERC20"
 
 
 // Address for Factory
-const factoryAddress = "0x0BF353cF4cffBf1C2F084E5762FA62E654c8eBB8";
+const factoryAddress = "0xEDF04002c8bDab6AdC2BD738F4e84953bb38c481";
 
 export function onLlamaPayCreated(event: LlamaPayCreated): void {
   let factory = LlamaPayFactory.load(factoryAddress);
@@ -29,6 +29,8 @@ export function onLlamaPayCreated(event: LlamaPayCreated): void {
   token.symbol = (erc20.try_symbol()).value;
   token.name = (erc20.try_name()).value;
   token.decimals = (erc20.try_decimals()).value;
+  token.createdTimestamp = event.block.timestamp;
+  token.createdBlock = event.block.number;
 
   // Create new contract node
   let contract = new LlamaPayContract(event.params.llamaPay.toHexString());
