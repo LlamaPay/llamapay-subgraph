@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, ByteArray, Bytes, crypto, ethereum } from "@graphprotocol/graph-ts";
 import { HistoryEvent, LlamaPayContract, Stream, Token, User } from "../../generated/schema";
 
 export function createUser(address: Address, event: ethereum.Event): User {
@@ -14,9 +14,10 @@ export function createUser(address: Address, event: ethereum.Event): User {
 }
 
 export function createStream(streamId: Bytes, event: ethereum.Event, contract: LlamaPayContract, payer: User, payee: User, token: Token, amtPerSec: BigInt): Stream {
-    let stream = Stream.load(streamId.toHexString());
+    const streamHash = generateStreamHash(contract.address, payer.address, payee.address, amtPerSec);
+    let stream = Stream.load(streamHash);
     if (stream === null) {
-        stream = new Stream(streamId.toHexString());
+        stream = new Stream(streamHash);
         stream.streamId = streamId;
         stream.contract = contract.id;
         stream.users = [payer.id, payee.id];
@@ -49,4 +50,9 @@ export function createHistory(event: ethereum.Event, eventType:string, payer: Us
     historyEvent.createdBlock = event.block.number;
     historyEvent.save();
     return historyEvent;
+}
+
+export function generateStreamHash(contractAddress: Bytes, payerAddress:Bytes, payeeAddress:Bytes, amountPerSec: BigInt): string {
+    const input = `${contractAddress.toHexString()}${payerAddress.toHexString()}${payeeAddress.toHexString()}${amountPerSec.toHexString()}`
+    return crypto.keccak256(ByteArray.fromUTF8(input)).toHexString();
 }
