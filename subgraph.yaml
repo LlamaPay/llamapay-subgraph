@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: LlamaPayFactory
-    network: fuji
+    network: avalanche
     source:
-      address: "0xf0CCCd4aD7B92d038E80818C8A85d8D926cf8139"
+      address: "0xEDF04002c8bDab6AdC2BD738F4e84953bb38c481"
       abi: LlamaPayFactory
-      startBlock: 8209305
+      startBlock: 13032977
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -29,7 +29,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: LlamaPay
-    network: fuji
+    network: avalanche
     source:
       abi: LlamaPay
     mapping:

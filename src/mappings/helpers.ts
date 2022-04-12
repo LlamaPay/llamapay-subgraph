@@ -14,10 +14,10 @@ export function createUser(address: Address, event: ethereum.Event): User {
 }
 
 export function createStream(streamId: Bytes, event: ethereum.Event, contract: LlamaPayContract, payer: User, payee: User, token: Token, amtPerSec: BigInt): Stream {
-    const streamHash = generateStreamHash(contract.address, payer.address, payee.address, amtPerSec);
-    let stream = Stream.load(streamHash);
+    const streamSubgraphId = generateStreamId(contract.address, streamId);
+    let stream = Stream.load(streamSubgraphId);
     if (stream === null) {
-        stream = new Stream(streamHash);
+        stream = new Stream(streamSubgraphId);
         stream.streamId = streamId;
         stream.contract = contract.id;
         stream.users = [payer.id, payee.id];
@@ -30,6 +30,8 @@ export function createStream(streamId: Bytes, event: ethereum.Event, contract: L
         stream.createdBlock = event.block.number;
     } else {
         stream.active = true;
+        stream.createdTimestamp = event.block.timestamp;
+        stream.createdBlock = event.block.number;
     }
     stream.save();
     return stream;
@@ -52,7 +54,6 @@ export function createHistory(event: ethereum.Event, eventType:string, payer: Us
     return historyEvent;
 }
 
-export function generateStreamHash(contractAddress: Bytes, payerAddress:Bytes, payeeAddress:Bytes, amountPerSec: BigInt): string {
-    const input = `${contractAddress.toHexString()}${payerAddress.toHexString()}${payeeAddress.toHexString()}${amountPerSec.toHexString()}`
-    return crypto.keccak256(ByteArray.fromUTF8(input)).toHexString();
+export function generateStreamId(contractAddress: Bytes, streamId: Bytes): string {
+    return `${contractAddress.toHexString()}-${streamId.toHexString()}`;
 }
