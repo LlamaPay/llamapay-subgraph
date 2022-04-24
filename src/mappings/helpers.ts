@@ -1,4 +1,4 @@
-import { Address, BigInt, ByteArray, Bytes, crypto, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { HistoryEvent, LlamaPayContract, Stream, Token, User } from "../../generated/schema";
 
 export function createUser(address: Address, event: ethereum.Event): User {
@@ -37,8 +37,9 @@ export function createStream(streamId: Bytes, event: ethereum.Event, contract: L
     return stream;
 }
 
-export function createHistory(event: ethereum.Event, eventType:string, payer: User, oldPayee: User | null, payee: User, stream: Stream, oldStream: Stream | null): HistoryEvent {
-    let historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
+export function createHistory(event: ethereum.Event, eventType:string, payer: User, oldPayee: User | null, payee: User, stream: Stream, oldStream: Stream | null, amount: BigInt | null): HistoryEvent {
+    const historyId = generateHistoryId(event.address, event.transaction.hash)
+    let historyEvent = new HistoryEvent(historyId);
     historyEvent.txHash = event.transaction.hash;
     historyEvent.eventType = eventType;
     historyEvent.stream = stream.id;
@@ -48,6 +49,9 @@ export function createHistory(event: ethereum.Event, eventType:string, payer: Us
     } else {
         historyEvent.users = [payer.id, payee.id];
     }
+    if (amount !== null) {
+        historyEvent.amountWithdrawn = amount;
+    }
     historyEvent.createdTimestamp = event.block.timestamp;
     historyEvent.createdBlock = event.block.number;
     historyEvent.save();
@@ -56,4 +60,8 @@ export function createHistory(event: ethereum.Event, eventType:string, payer: Us
 
 export function generateStreamId(contractAddress: Bytes, streamId: Bytes): string {
     return `${contractAddress.toHexString()}-${streamId.toHexString()}`;
+}
+
+export function generateHistoryId(contractAddress: Bytes, txHash: Bytes): string {
+    return `${contractAddress.toHexString()}-${txHash.toHexString()}`;
 }

@@ -51,4 +51,6 @@ templates:
           handler: onStreamCancelled
         - event: StreamModified(indexed address,indexed address,uint216,bytes32,indexed address,uint216,bytes32)
           handler: onStreamModified
+        - event: Withdraw(indexed address,indexed address,uint216,bytes32,uint256)
+          handler: onWithdraw
       file: ./src/mappings/LlamaPay.ts

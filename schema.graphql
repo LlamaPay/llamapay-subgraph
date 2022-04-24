@@ -48,6 +48,7 @@ type HistoryEvent @entity {
   users: [User!]!
   stream: Stream!
   oldStream: Stream # If event is modified stream, then stores the old stream 
+  amountWithdrawn: BigInt
   createdTimestamp: BigInt!
   createdBlock: BigInt!
 }
