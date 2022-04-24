@@ -18,7 +18,7 @@ export function onStreamCreated(event: StreamCreated): void {
   const payer = createUser(event.params.from, event);
   const payee = createUser(event.params.to, event);
   const stream = createStream(event.params.streamId, event, contract, payer, payee, token, event.params.amountPerSec);
-  createHistory(event, "StreamCreated", payer, null, payee, stream, null, null);
+  createHistory(event, "StreamCreated", payer, null, payee, stream, event.params.streamId, null, null, null);
   
   contract.save();
   token.save();
@@ -34,7 +34,7 @@ export function onStreamCancelled(event: StreamCancelled): void {
   const stream = Stream.load(streamSubgraphId)!;
   stream.active = false;
 
-  createHistory(event, "StreamCancelled", payer, null, payee, stream, null, null);
+  createHistory(event, "StreamCancelled", payer, null, payee, stream, event.params.streamId, null, null, null);
 
   contract.save();
   stream.save();
@@ -53,7 +53,7 @@ export function onStreamModified(event: StreamModified): void {
   oldStream.active = false;
 
   const stream = createStream(event.params.newStreamId, event, contract, payer, payee, token, event.params.amountPerSec);
-  createHistory(event, "StreamModified", payer, oldPayee, payee, stream, oldStream, null);
+  createHistory(event, "StreamModified", payer, oldPayee, payee, stream, event.params.newStreamId, oldStream, event.params.oldStreamId, null);
 
   contract.save();
   oldStream.save();
@@ -66,7 +66,7 @@ export function onWithdraw(event: Withdraw):void {
   const payer = createUser(event.params.from, event);
   const payee = createUser(event.params.to, event);
   const stream = createStream(event.params.streamId, event, contract, payer, payee, token, event.params.amountPerSec);
-  createHistory(event, "Withdraw", payer, null, payee, stream, null, event.params.amount);
+  createHistory(event, "Withdraw", payer, null, payee, stream, event.params.streamId, null, null, event.params.amount);
 
   contract.save();
   token.save();

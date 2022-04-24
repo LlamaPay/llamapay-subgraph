@@ -39,8 +39,8 @@ export function createStream(streamId: Bytes, event: ethereum.Event, contract: L
     return stream;
 }
 
-export function createHistory(event: ethereum.Event, eventType:string, payer: User, oldPayee: User | null, payee: User, stream: Stream, oldStream: Stream | null, amount: BigInt | null): HistoryEvent {
-    const historyId = generateHistoryId(event.address, event.transaction.hash)
+export function createHistory(event: ethereum.Event, eventType:string, payer: User, oldPayee: User | null, payee: User, stream: Stream, streamId: Bytes, oldStream: Stream | null, oldStreamId: Bytes | null, amount: BigInt | null): HistoryEvent {
+    const historyId = generateHistoryId(event.address, streamId, oldStreamId, event.transaction.hash);
     let historyEvent = new HistoryEvent(historyId);
     historyEvent.txHash = event.transaction.hash;
     historyEvent.eventType = eventType;
@@ -65,6 +65,10 @@ export function generateStreamId(contractAddress: Bytes, streamId: Bytes): strin
     return `${contractAddress.toHexString()}-${streamId.toHexString()}`;
 }
 
-export function generateHistoryId(contractAddress: Bytes, txHash: Bytes): string {
-    return `${contractAddress.toHexString()}-${txHash.toHexString()}`;
+export function generateHistoryId(contractAddress: Bytes, streamId: Bytes, oldStreamId: Bytes | null, txHash: Bytes,): string {
+    if (oldStreamId !== null) {
+        return `${contractAddress.toHexString()}-${streamId.toHexString()}-${oldStreamId.toHexString()}-${txHash.toHexString()}`;
+    } else {
+        return `${contractAddress.toHexString()}-${streamId.toHexString()}-${txHash.toHexString()}`;
+    }
 }
