@@ -9,6 +9,7 @@ export function createUser(address: Address, event: ethereum.Event): User {
         user.createdTimestamp = event.block.timestamp;
         user.createdBlock = event.block.number;
     }
+
     user.save();
     return user;
 }
@@ -33,6 +34,7 @@ export function createStream(streamId: Bytes, event: ethereum.Event, contract: L
         stream.createdTimestamp = event.block.timestamp;
         stream.createdBlock = event.block.number;
     }
+
     stream.save();
     return stream;
 }
@@ -54,6 +56,7 @@ export function createHistory(event: ethereum.Event, eventType:string, payer: Us
     }
     historyEvent.createdTimestamp = event.block.timestamp;
     historyEvent.createdBlock = event.block.number;
+    
     historyEvent.save();
     return historyEvent;
 }
