@@ -1,4 +1,4 @@
-import { Address, BigInt, ByteArray, Bytes, crypto, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { HistoryEvent, LlamaPayContract, Stream, Token, User } from "../../generated/schema";
 
 export function createUser(address: Address, event: ethereum.Event): User {
@@ -9,6 +9,7 @@ export function createUser(address: Address, event: ethereum.Event): User {
         user.createdTimestamp = event.block.timestamp;
         user.createdBlock = event.block.number;
     }
+
     user.save();
     return user;
 }
@@ -33,12 +34,14 @@ export function createStream(streamId: Bytes, event: ethereum.Event, contract: L
         stream.createdTimestamp = event.block.timestamp;
         stream.createdBlock = event.block.number;
     }
+
     stream.save();
     return stream;
 }
 
-export function createHistory(event: ethereum.Event, eventType:string, payer: User, oldPayee: User | null, payee: User, stream: Stream, oldStream: Stream | null): HistoryEvent {
-    let historyEvent = new HistoryEvent(event.transaction.hash.toHexString());
+export function createHistory(event: ethereum.Event, eventType:string, payer: User, oldPayee: User | null, payee: User, stream: Stream, streamId: Bytes, oldStream: Stream | null, oldStreamId: Bytes | null, amount: BigInt | null): HistoryEvent {
+    const historyId = generateHistoryId(event.address, streamId, oldStreamId, event.transaction.hash);
+    let historyEvent = new HistoryEvent(historyId);
     historyEvent.txHash = event.transaction.hash;
     historyEvent.eventType = eventType;
     historyEvent.stream = stream.id;
@@ -48,12 +51,24 @@ export function createHistory(event: ethereum.Event, eventType:string, payer: Us
     } else {
         historyEvent.users = [payer.id, payee.id];
     }
+    if (amount !== null) {
+        historyEvent.amountWithdrawn = amount;
+    }
     historyEvent.createdTimestamp = event.block.timestamp;
     historyEvent.createdBlock = event.block.number;
+    
     historyEvent.save();
     return historyEvent;
 }
 
 export function generateStreamId(contractAddress: Bytes, streamId: Bytes): string {
     return `${contractAddress.toHexString()}-${streamId.toHexString()}`;
+}
+
+export function generateHistoryId(contractAddress: Bytes, streamId: Bytes, oldStreamId: Bytes | null, txHash: Bytes,): string {
+    if (oldStreamId !== null) {
+        return `${contractAddress.toHexString()}-${streamId.toHexString()}-${oldStreamId.toHexString()}-${txHash.toHexString()}`;
+    } else {
+        return `${contractAddress.toHexString()}-${streamId.toHexString()}-${txHash.toHexString()}`;
+    }
 }
