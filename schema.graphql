@@ -30,6 +30,7 @@ type Stream @entity {
   paused: Boolean!
   lastPaused: BigInt!
   pausedAmount: BigInt!
+  reason: String
   historicalEvents: [HistoryEvent!]! @derivedFrom(field: "stream")
   createdTimestamp: BigInt!
   createdBlock: BigInt!

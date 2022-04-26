@@ -1,6 +1,6 @@
 import { BigInt } from "@graphprotocol/graph-ts";
 import { HistoryEvent, LlamaPayContract, Token } from "../../generated/schema";
-import { CreateStreamCall, PayerDeposit, PayerWithdraw, StreamCancelled, StreamCreated, StreamModified, StreamPaused, Withdraw } from "../../generated/templates/LlamaPay/LlamaPay";
+import { PayerDeposit, PayerWithdraw, StreamCancelled, StreamCreated, StreamCreatedWithReason, StreamModified, StreamPaused, Withdraw } from "../../generated/templates/LlamaPay/LlamaPay";
 import { loadStream, loadUser } from "./helpers";
 
 export function onPayerDeposit(event: PayerDeposit): void {
@@ -283,5 +283,62 @@ export function onPayerWithdraw(event: PayerWithdraw): void {
   historyEvent.amount = amount;
   historyEvent.createdTimestamp = timestamp;
   historyEvent.createdBlock = block;
+  historyEvent.save();
+}
+
+export function onStreamCreatedWithReason(event: StreamCreatedWithReason): void {
+  const contractAddress = event.address;
+  const payerAddress = event.params.from;
+  const payeeAddress = event.params.to;
+  const amountPerSec = event.params.amountPerSec;
+  const streamId = event.params.streamId;
+  const reason = event.params.reason;
+  const txHash = event.transaction.hash;
+  const timestamp = event.block.timestamp;
+  const block = event.block.number;
+  // Load users
+  const payer = loadUser(payerAddress, timestamp, block);
+  const payee = loadUser(payeeAddress, timestamp, block);
+
+  // Load contract
+  const contract = LlamaPayContract.load(contractAddress.toHexString())!;
+
+  // Load token
+  const token = Token.load(contract.token)!;
+
+  // Load stream
+  let stream = loadStream(contractAddress, streamId, contract, payer, payee, token, amountPerSec, block, timestamp);
+
+  let streamWasPaused = false;
+
+  if (stream.paused) {
+    streamWasPaused = true;
+    // calculate the amount of tokens they missed out while paused.
+    // pausedAmount += (amount per sec * (curr timestamp - last paused))
+    const delta = timestamp.minus(stream.lastPaused);
+    const addAmount = stream.amountPerSec.times(delta);
+    stream.pausedAmount = stream.pausedAmount.plus(addAmount);
+    stream.paused = false;
+  } else {
+    stream.active = true;
+    stream.createdTimestamp = timestamp;
+    stream.createdBlock = block;
+  }
+  stream.reason = reason;
+  stream.save();
+
+
+  // Create unique id for history entity
+  const entityId = `${contractAddress.toHexString()}-${streamId.toHexString()}-${txHash.toHexString()}`;
+
+  // Create history entity
+  let historyEvent = new HistoryEvent(entityId);
+  historyEvent.txHash = txHash;
+  historyEvent.eventType = streamWasPaused ? "StreamResumed" : "StreamCreated";
+  historyEvent.users = [payer.id, payee.id];
+  historyEvent.stream = stream.id;
+  historyEvent.createdTimestamp = timestamp;
+  historyEvent.createdBlock = block;
+
   historyEvent.save();
 }
