@@ -52,7 +52,7 @@ export function createHistory(event: ethereum.Event, eventType:string, payer: Us
         historyEvent.users = [payer.id, payee.id];
     }
     if (amount !== null) {
-        historyEvent.amountWithdrawn = amount;
+        historyEvent.amount = amount;
     }
     historyEvent.createdTimestamp = event.block.timestamp;
     historyEvent.createdBlock = event.block.number;
