@@ -10,15 +10,15 @@ import {ERC20} from "../../generated/LlamaPayFactory/ERC20"
 
 
 // Address for Factory
-const factoryAddress = "0xEDF04002c8bDab6AdC2BD738F4e84953bb38c481";
+// const factoryAddress = "0xEDF04002c8bDab6AdC2BD738F4e84953bb38c481";
 
 export function onLlamaPayCreated(event: LlamaPayCreated): void {
-  let factory = LlamaPayFactory.load(factoryAddress);
+  let factory = LlamaPayFactory.load(event.address.toHexString());
   // If factory node doesn't exist then create one 
   if (factory === null) {
-    factory = new LlamaPayFactory(factoryAddress);
+    factory = new LlamaPayFactory(event.address.toHexString());
     factory.count = 0;
-    factory.address = Bytes.fromHexString(factoryAddress);
+    factory.address = Bytes.fromHexString(event.address.toHexString());
     factory.createdTimestamp = event.block.timestamp;
     factory.createdBlock = event.block.number;
   }
