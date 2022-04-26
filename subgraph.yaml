@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: LlamaPayFactory
-    network: mainnet
+    network: kovan
     source:
-      address: "0xC21d1416cb92112C054D83Aadd006e184722d50F"
+      address: "0x7D65A4E90f105F72f6Ff0E44A15Af791ba93cD0E"
       abi: LlamaPayFactory
-      startBlock: 14657929
+      startBlock: 31268339
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -29,7 +29,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: LlamaPay
-    network: mainnet
+    network: kovan
     source:
       abi: LlamaPay
     mapping:
@@ -53,4 +53,8 @@ templates:
           handler: onStreamModified
         - event: Withdraw(indexed address,indexed address,uint216,bytes32,uint256)
           handler: onWithdraw
+        - event: PayerDeposit(indexed address,uint256)
+          handler: onPayerDeposit
+        - event: PayerWithdraw(indexed address,uint256)
+          handler: onPayerWithdraw
       file: ./src/mappings/LlamaPay.ts

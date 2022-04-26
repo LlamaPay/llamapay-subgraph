@@ -1,74 +1,43 @@
-import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
-import { HistoryEvent, LlamaPayContract, Stream, Token, User } from "../../generated/schema";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { LlamaPayContract, Stream, Token, User } from "../../generated/schema";
 
-export function createUser(address: Address, event: ethereum.Event): User {
+export function loadUser(address: Address, timestamp: BigInt, block: BigInt): User {
+    // Load User
     let user = User.load(address.toHexString());
+    // If User doesn't exist, then create a new User entity
     if (user === null) {
         user = new User(address.toHexString());
         user.address = address;
-        user.createdTimestamp = event.block.timestamp;
-        user.createdBlock = event.block.number;
+        user.createdTimestamp = timestamp;
+        user.createdBlock = block;
     }
-
+    // Save and return
     user.save();
     return user;
 }
 
-export function createStream(streamId: Bytes, event: ethereum.Event, contract: LlamaPayContract, payer: User, payee: User, token: Token, amtPerSec: BigInt): Stream {
-    const streamSubgraphId = generateStreamId(contract.address, streamId);
-    let stream = Stream.load(streamSubgraphId);
+export function loadStream(contractAddress: Address, streamId: Bytes, contract: LlamaPayContract, payer: User, payee: User, token: Token, amountPerSec: BigInt, block: BigInt, timestamp: BigInt): Stream {
+    // Unique stream id
+    const entityId = `${contractAddress}-${streamId}`;
+    // Load Stream
+    let stream = Stream.load(entityId);
     if (stream === null) {
-        stream = new Stream(streamSubgraphId);
+        stream = new Stream(entityId);
         stream.streamId = streamId;
         stream.contract = contract.id;
         stream.users = [payer.id, payee.id];
         stream.payer = payer.id;
         stream.payee = payee.id;
         stream.token = token.id;
-        stream.amountPerSec = amtPerSec
-        stream.active = true;
-        stream.createdTimestamp = event.block.timestamp;
-        stream.createdBlock = event.block.number;
-    } else {
-        stream.active = true;
-        stream.createdTimestamp = event.block.timestamp;
-        stream.createdBlock = event.block.number;
+        stream.amountPerSec = amountPerSec;
+        stream.active = false;
+        stream.paused = false;
+        stream.lastPaused = new BigInt(0);
+        stream.pausedAmount = new BigInt(0);
+        stream.createdTimestamp = timestamp;
+        stream.createdBlock = block;
     }
-
+    // Save and return
     stream.save();
     return stream;
-}
-
-export function createHistory(event: ethereum.Event, eventType:string, payer: User, oldPayee: User | null, payee: User, stream: Stream, streamId: Bytes, oldStream: Stream | null, oldStreamId: Bytes | null, amount: BigInt | null): HistoryEvent {
-    const historyId = generateHistoryId(event.address, streamId, oldStreamId, event.transaction.hash);
-    let historyEvent = new HistoryEvent(historyId);
-    historyEvent.txHash = event.transaction.hash;
-    historyEvent.eventType = eventType;
-    historyEvent.stream = stream.id;
-    if (oldPayee !== null && oldStream !== null) {
-        historyEvent.users = [payer.id, payee.id, oldPayee.id];
-        historyEvent.oldStream = oldStream.id;
-    } else {
-        historyEvent.users = [payer.id, payee.id];
-    }
-    if (amount !== null) {
-        historyEvent.amount = amount;
-    }
-    historyEvent.createdTimestamp = event.block.timestamp;
-    historyEvent.createdBlock = event.block.number;
-    
-    historyEvent.save();
-    return historyEvent;
-}
-
-export function generateStreamId(contractAddress: Bytes, streamId: Bytes): string {
-    return `${contractAddress.toHexString()}-${streamId.toHexString()}`;
-}
-
-export function generateHistoryId(contractAddress: Bytes, streamId: Bytes, oldStreamId: Bytes | null, txHash: Bytes,): string {
-    if (oldStreamId !== null) {
-        return `${contractAddress.toHexString()}-${streamId.toHexString()}-${oldStreamId.toHexString()}-${txHash.toHexString()}`;
-    } else {
-        return `${contractAddress.toHexString()}-${streamId.toHexString()}-${txHash.toHexString()}`;
-    }
 }
