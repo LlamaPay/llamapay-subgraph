@@ -284,6 +284,12 @@ export function onPayerWithdraw(event: PayerWithdraw): void {
   // Load payooor
   const payer = loadUser(payerAddress, timestamp, block);
 
+  // Load contract
+  const contract = LlamaPayContract.load(contractAddress.toHexString())!;
+
+  // Load token
+  const token = Token.load(contract.token)!;
+
   // Create unique id for history entity
   const entityId = `${contractAddress.toHexString()}-${payerAddress.toHexString()}-${txHash.toHexString()}`
 
