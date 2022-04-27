@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0x7D65A4E90f105F72f6Ff0E44A15Af791ba93cD0E"
       abi: LlamaPayFactory
-      startBlock: 31268339
+      startBlock: 31268365
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -57,4 +57,6 @@ templates:
           handler: onPayerDeposit
         - event: PayerWithdraw(indexed address,uint256)
           handler: onPayerWithdraw
+        - event: StreamCreatedWithReason(indexed address,indexed address,uint216,bytes32,string)
+          handler: onStreamCreatedWithReason
       file: ./src/mappings/LlamaPay.ts
