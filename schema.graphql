@@ -50,6 +50,7 @@ type HistoryEvent @entity {
   txHash: Bytes!
   eventType: String!
   users: [User!]!
+  token: Token!
   stream: Stream
   oldStream: Stream 
   amount: BigInt

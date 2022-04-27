@@ -14,6 +14,12 @@ export function onPayerDeposit(event: PayerDeposit): void {
   // Load Payoor
   const payer = loadUser(payerAddress, timestamp, block);
 
+  // Load contract
+  const contract = LlamaPayContract.load(contractAddress.toHexString())!;
+
+  // Load token
+  const token = Token.load(contract.token)!;
+
   // Create unique id for history entity
   const entityId = `${contractAddress.toHexString()}-${payerAddress.toHexString()}-${txHash.toHexString()}`
 
@@ -22,6 +28,7 @@ export function onPayerDeposit(event: PayerDeposit): void {
   historyEvent.txHash = txHash;
   historyEvent.eventType = "Deposit"
   historyEvent.users = [payer.id];
+  historyEvent.token = token.id;
   historyEvent.amount = amount;
   historyEvent.createdTimestamp = timestamp;
   historyEvent.createdBlock = block;
@@ -62,6 +69,7 @@ export function onWithdraw(event: Withdraw): void {
   historyEvent.txHash = txHash;
   historyEvent.eventType = "Withdraw";
   historyEvent.users = [payer.id, payee.id];
+  historyEvent.token = token.id;
   historyEvent.stream = stream.id;
   historyEvent.amount = amount;
   historyEvent.createdTimestamp = timestamp;
@@ -107,6 +115,7 @@ export function onStreamPaused(event: StreamPaused): void {
   historyEvent.txHash = txHash;
   historyEvent.eventType = "StreamPaused";
   historyEvent.users = [payer.id, payee.id];
+  historyEvent.token = token.id;
   historyEvent.stream = stream.id;
   historyEvent.createdTimestamp = timestamp;
   historyEvent.createdBlock = block;
@@ -162,6 +171,7 @@ export function onStreamCreated(event: StreamCreated ): void {
   historyEvent.txHash = txHash;
   historyEvent.eventType = streamWasPaused ? "StreamResumed" : "StreamCreated";
   historyEvent.users = [payer.id, payee.id];
+  historyEvent.token = token.id;
   historyEvent.stream = stream.id;
   historyEvent.createdTimestamp = timestamp;
   historyEvent.createdBlock = block;
@@ -215,6 +225,7 @@ export function onStreamModified(event: StreamModified): void {
   historyEvent.txHash = txHash;
   historyEvent.eventType = "StreamModified";
   historyEvent.users = [payer.id, payee.id, oldPayee.id];
+  historyEvent.token = token.id;
   historyEvent.stream = stream.id;
   historyEvent.oldStream = oldStream.id;
   historyEvent.createdTimestamp = timestamp;
@@ -255,6 +266,7 @@ export function onStreamCancelled(event: StreamCancelled): void {
   historyEvent.txHash = txHash;
   historyEvent.eventType = "StreamCancelled";
   historyEvent.users = [payer.id, payee.id];
+  historyEvent.token = token.id;
   historyEvent.stream = stream.id;
   historyEvent.createdTimestamp = timestamp;
   historyEvent.createdBlock = block;
@@ -280,6 +292,7 @@ export function onPayerWithdraw(event: PayerWithdraw): void {
   historyEvent.txHash = txHash;
   historyEvent.eventType = "Withdraw"
   historyEvent.users = [payer.id];
+  historyEvent.token = token.id;
   historyEvent.amount = amount;
   historyEvent.createdTimestamp = timestamp;
   historyEvent.createdBlock = block;
@@ -336,6 +349,7 @@ export function onStreamCreatedWithReason(event: StreamCreatedWithReason): void 
   historyEvent.txHash = txHash;
   historyEvent.eventType = streamWasPaused ? "StreamResumed" : "StreamCreated";
   historyEvent.users = [payer.id, payee.id];
+  historyEvent.token = token.id;
   historyEvent.stream = stream.id;
   historyEvent.createdTimestamp = timestamp;
   historyEvent.createdBlock = block;
