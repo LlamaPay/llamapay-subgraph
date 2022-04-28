@@ -21,7 +21,7 @@ export function onPayerDeposit(event: PayerDeposit): void {
   const token = Token.load(contract.token)!;
 
   // Create unique id for history entity
-  const entityId = `${contractAddress.toHexString()}-${payerAddress.toHexString()}-${txHash.toHexString()}`
+  const entityId = `${contractAddress.toHexString()}-${payerAddress.toHexString()}-${amount.toHexString()}-${txHash.toHexString()}`
 
   // Create history entity and fill with values
   let historyEvent = new HistoryEvent(entityId);
@@ -62,7 +62,7 @@ export function onWithdraw(event: Withdraw): void {
   const stream = loadStream(contractAddress, streamId, contract, payer, payee, token, amountPerSec, block, timestamp);
 
   // Create unique id for history entity
-  const entityId = `${contractAddress.toHexString()}-${streamId.toHexString()}-${txHash.toHexString()}`;
+  const entityId = `${contractAddress.toHexString()}-${streamId.toHexString()}-${amount.toHexString()}-${txHash.toHexString()}`;
 
   // Create history entity and fill with values
   let historyEvent = new HistoryEvent(entityId);
@@ -294,7 +294,7 @@ export function onPayerWithdraw(event: PayerWithdraw): void {
   const token = Token.load(contract.token)!;
 
   // Create unique id for history entity
-  const entityId = `${contractAddress.toHexString()}-${payerAddress.toHexString()}-${txHash.toHexString()}`
+  const entityId = `${contractAddress.toHexString()}-${payerAddress.toHexString()}-${amount.toHexString()}-${txHash.toHexString()}`
 
   // Create history entity and fill with values
   let historyEvent = new HistoryEvent(entityId);
