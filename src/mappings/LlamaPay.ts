@@ -299,7 +299,7 @@ export function onPayerWithdraw(event: PayerWithdraw): void {
   // Create history entity and fill with values
   let historyEvent = new HistoryEvent(entityId);
   historyEvent.txHash = txHash;
-  historyEvent.eventType = "Withdraw"
+  historyEvent.eventType = "PayerWithdraw"
   historyEvent.users = [payer.id];
   historyEvent.token = token.id;
   historyEvent.amount = amount;
