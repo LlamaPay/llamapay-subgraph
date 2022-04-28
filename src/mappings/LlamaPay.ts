@@ -216,6 +216,8 @@ export function onStreamModified(event: StreamModified): void {
   stream.active = true;
   stream.createdTimestamp = timestamp;
   stream.createdBlock = block;
+  // Carry over old reasoning from old stream
+  stream.reason = oldStream.reason;
   stream.save();
 
   // Create unique id for history entity
@@ -259,6 +261,7 @@ export function onStreamCancelled(event: StreamCancelled): void {
   stream.active = false;
   stream.paused = false;
   stream.pausedAmount = new BigInt(0);
+  stream.reason = null;
   stream.save();
 
   const entityId = `${contractAddress.toHexString()}-${streamId.toHexString()}-${txHash.toHexString()}`;

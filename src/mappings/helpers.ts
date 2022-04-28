@@ -18,7 +18,7 @@ export function loadUser(address: Address, timestamp: BigInt, block: BigInt): Us
 
 export function loadStream(contractAddress: Address, streamId: Bytes, contract: LlamaPayContract, payer: User, payee: User, token: Token, amountPerSec: BigInt, block: BigInt, timestamp: BigInt): Stream {
     // Unique stream id
-    const entityId = `${contractAddress}-${streamId}`;
+    const entityId = `${contractAddress.toHexString()}-${streamId.toHexString()}`;
     // Load Stream
     let stream = Stream.load(entityId);
     if (stream === null) {

@@ -6,9 +6,9 @@ dataSources:
     name: LlamaPayFactory
     network: kovan
     source:
-      address: "0x7D65A4E90f105F72f6Ff0E44A15Af791ba93cD0E"
+      address: "0xD43bB75Cc924e8475dFF2604b962f39089e4f842"
       abi: LlamaPayFactory
-      startBlock: 31268365
+      startBlock: 31267493
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -59,4 +59,6 @@ templates:
           handler: onPayerWithdraw
         - event: StreamCreatedWithReason(indexed address,indexed address,uint216,bytes32,string)
           handler: onStreamCreatedWithReason
+        - event: StreamPaused(indexed address,indexed address,uint216,bytes32)
+          handler: onStreamPaused
       file: ./src/mappings/LlamaPay.ts
