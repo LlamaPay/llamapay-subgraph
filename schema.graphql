@@ -68,3 +68,10 @@ type Token @entity {
   createdTimestamp: BigInt!
   createdBlock: BigInt!
 }
+
+type EventDebug @entity {
+  id: ID!
+  address: Bytes!
+  createdTimestamp: BigInt!
+  createdBlock: BigInt!
+}

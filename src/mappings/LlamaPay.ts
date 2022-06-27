@@ -1,5 +1,5 @@
-import { BigInt } from "@graphprotocol/graph-ts";
-import { HistoryEvent, LlamaPayContract, Token } from "../../generated/schema";
+import { BigInt, ethereum } from "@graphprotocol/graph-ts";
+import { EventDebug, HistoryEvent, LlamaPayContract, Token } from "../../generated/schema";
 import { PayerDeposit, PayerWithdraw, StreamCancelled, StreamCreated, StreamCreatedWithReason, StreamModified, StreamPaused, Withdraw } from "../../generated/templates/LlamaPay/LlamaPay";
 import { loadStream, loadUser } from "./helpers";
 
@@ -177,6 +177,13 @@ export function onStreamCreated(event: StreamCreated ): void {
   historyEvent.createdBlock = block;
 
   historyEvent.save();
+
+  let debug = new EventDebug(block.toString());
+  debug.address = contractAddress;
+  debug.createdTimestamp = timestamp;
+  debug.createdBlock = block;
+  debug.save();
+
 }
 
 export function onStreamModified(event: StreamModified): void {

@@ -2,13 +2,13 @@ specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: LlamaPayFactory
-    network: kovan
+    network: andromeda 
     source:
-      address: "0xD43bB75Cc924e8475dFF2604b962f39089e4f842"
+      address: "0x43634d1C608f16Fb0f4926c12b54124C93030600"
       abi: LlamaPayFactory
-      startBlock: 31267493
+      startBlock: 2921019
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -29,7 +29,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: LlamaPay
-    network: kovan
+    network: andromeda 
     source:
       abi: LlamaPay
     mapping:
