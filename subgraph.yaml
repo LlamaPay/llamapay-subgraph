@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum
     name: LlamaPayFactory
-    network: kovan
+    network: bsc
     source:
-      address: "0xD43bB75Cc924e8475dFF2604b962f39089e4f842"
+      address: "0xde1C04855c2828431ba637675B6929A684f84C7F"
       abi: LlamaPayFactory
       startBlock: 31267493
     mapping:
@@ -29,7 +29,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: LlamaPay
-    network: kovan
+    network: bsc
     source:
       abi: LlamaPay
     mapping:
